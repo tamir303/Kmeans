@@ -1,58 +1,73 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import * as d3 from "d3";
+import React, { useState, useCallback, useRef } from 'react';
+import { AgChartsReact } from 'ag-charts-react';
+import { ClusterObjectType } from '@/app/types';
 
-interface dataPoint {
-  xVal: number;
-  yVal: number;
-}
+const Axis: React.FC<ClusterObjectType> = ({ fields, values }) => {
+  const axisRef = useRef(null);
 
-interface AxisProps {
-  data: dataPoint[];
-  height: number;
-  width: number;
-}
+  const createInputObject = (fields: string[], values: string[]) => {
+    const res: { [key: string]: string } = {}
+    fields.forEach((field, index) => {
+      res[field] = values[index];
+    });
+    return res;
+  }
 
-const Axis: React.FC<AxisProps> = ({ data, height, width }) => {
-  const axisRef = useRef<SVGSVGElement | null>(null);
+  const [options, setOptions] = useState({
+    title: {
+      text: `${values.length} Inputs on Axis`
+    },
+    subtitle: {
+      text: ''
+    },
+    data:
+      values.map((valueArray) => createInputObject(fields, valueArray))
+    ,
+    series: [
+      {
+        type: "scatter",
+        xKey: `${fields[0]}`,
+        yKey: `${fields[1]}`,
+        title: "Info",
+        marker: {
+          shape: 'circle',
+          size: 20,
+          fill: '#ff0000',
+          stroke: '#ffffff',
+        },
+      },
+    ],
+    axes: [
+      {
+        type: 'number',
+        position: 'bottom',
+        gridStyle: [
+          {
+            stroke: 'rgba(219, 219, 219, 1)',
+            lineDash: [4, 2],
+          },
+        ]
+      },
+      {
+        type: 'number',
+        position: 'left',
+        gridStyle: [
+          {
+            stroke: 'rgba(219, 219, 219, 1)',
+            lineDash: [4, 2],
+          },
+        ]
+      },
+    ],
+  });
 
-  useEffect(() => {
-    drawAxis();
-  }, [data]);
 
-  const drawAxis = () => {
-    if (!axisRef.current) return;
-
-    const svg = d3.select(axisRef.current);
-    svg.selectAll("*").remove(); // Clear any existing elements (optional)
-
-    // Set up margins and scales
-    const margin = { top: 20, right: 20, bottom: 30, left: 40 };
-    const innerWidth = width - margin.left - margin.right;
-    const innerHeight = height - margin.top - margin.bottom;
-
-    // Create X and Y scales without domain calculation
-    const xScale = d3.scaleLinear().range([0, innerWidth]);
-    const yScale = d3.scaleLinear().range([innerHeight, 0]);
-
-    // Create X and Y axes
-    const xAxis = d3.axisBottom(xScale);
-    const yAxis = d3.axisLeft(yScale);
-
-    svg
-      .append("g")
-      .attr("transform", `translate(${margin.left}, ${height - margin.bottom})`)
-      .call(xAxis);
-
-    svg
-      .append("g")
-      .attr("transform", `translate(${margin.left}, ${margin.top})`)
-      .call(yAxis);
-  };
-
-  return <svg ref={axisRef} width={width} height={height} />;
+  return <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+    <AgChartsReact ref={axisRef} options={options} />
+  </div>
 };
 
 export default Axis;
