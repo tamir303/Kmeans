@@ -1,12 +1,12 @@
 "use client";
 
 /* eslint-disable react-hooks/rules-of-hooks */
-import { dataStructType } from "@/app/types";
+import { DataObjectType } from "@/app/types";
 import { useCallback } from "react";
 import Axis from "./Axis";
 
 interface GraphContainerProps {
-  data: dataStructType;
+  data: DataObjectType;
   witdh: number;
   height: number;
 }
@@ -16,7 +16,12 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
   witdh,
   height,
 }) => {
-  const findMaxFields = (data: dataStructType) => {
+  const findMaxFields = ({ clusters }: DataObjectType) => {
+    const data = {
+      values: clusters.flatMap((clusters) => clusters.values),
+      fields: clusters[0].fields,
+    };
+
     const maxFields = Array.from(
       { length: data.fields.length },
       (_, index) => index
