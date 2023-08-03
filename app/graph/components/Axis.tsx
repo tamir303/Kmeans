@@ -7,6 +7,8 @@ import { DataObjectType } from "@/app/types";
 
 const Axis: React.FC<DataObjectType> = ({ iter, k, clusters }) => {
   const axisRef = useRef(null);
+  const values = clusters?.flatMap((cluster) => cluster.values) || []
+  const fields = clusters ? clusters[0].fields : []
 
   const createInputObject = (fields: string[], values: string[]) => {
     const res: { [key: string]: string } = {};

@@ -17,23 +17,25 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
   height,
 }) => {
   const findMaxFields = ({ clusters }: DataObjectType) => {
-    const data = {
-      values: clusters.flatMap((clusters) => clusters.values),
-      fields: clusters[0].fields,
-    };
+    if (clusters) {
+      const data = {
+        values: clusters.flatMap((clusters) => clusters.values),
+        fields: clusters[0].fields,
+      };
 
-    const maxFields = Array.from(
-      { length: data.fields.length },
-      (_, index) => index
-    ).map((index) => {
-      return Math.max(
-        ...data.values.map((valuesArray) =>
-          Number(valuesArray[index].valueOf())
-        )
-      );
-    });
+      const maxFields = Array.from(
+        { length: data.fields.length },
+        (_, index) => index
+      ).map((index) => {
+        return Math.max(
+          ...data.values.map((valuesArray) =>
+            Number(valuesArray[index].valueOf())
+          )
+        );
+      });
 
-    return maxFields;
+      return maxFields
+    }
   };
 
   const getMaxFields = useCallback(() => {
@@ -51,7 +53,7 @@ const GraphContainer: React.FC<GraphContainerProps> = ({
         backgroundColor: "#e0e0e0",
       }}
     >
-      <Axis fields={data.fields} values={data.values} />
+      <Axis iter={data.iter} k={data.k} clusters={data.clusters} />
     </div>
   );
 };

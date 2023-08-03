@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import GraphContainer from "./components/Graph";
 import Sidebar from "./components/Sidebar";
 import { useState } from "react";
-import { DataObjectType } from "../types";
+import { DataObjectType, ClusterObjectType } from "../types";
 
 const Graph = () => {
   const searchParams = useSearchParams();
@@ -13,7 +13,7 @@ const Graph = () => {
   const [data, setData] = useState<DataObjectType>({
     iter: 0,
     k: 0,
-    clusters: query ? JSON.parse(decodeURIComponent(query)) : null,
+    clusters: query ? [JSON.parse(decodeURIComponent(query)) as ClusterObjectType] : null,
   });
 
   const graphWidth = 600;
