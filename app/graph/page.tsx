@@ -23,7 +23,14 @@ const Graph = () => {
   const graphHeight = 400;
 
   const runClusterIteration = () => {
-    const clusterData = axios.post("/api/clusterData", data);
+    const clusterData = axios
+      .post("/api/clusterData", data)
+      .then((res) => {
+        if (res.status === 200) setData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (

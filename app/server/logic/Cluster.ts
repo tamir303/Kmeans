@@ -41,6 +41,12 @@ export class Cluster {
         this._centroid = centroid;
     }
 
+    addValue(value : string[] | undefined) {
+        if (value && value.length !== 0) 
+            this._values.push(value)
+        
+    }
+
     /**
        * Centroid_d = (1 / N) * Σᵢ x_i,d
           Where:
