@@ -1,14 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import React, { useState, useCallback, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { AgChartsReact } from "ag-charts-react";
 import { ClusterObjectType, DataObjectType } from "@/app/types";
 
 const Axis: React.FC<DataObjectType> = ({ iter, k, clusters }) => {
-  const axisRef = useRef(null);
   const numOfPoints = clusters.flatMap((cluster) => cluster.values).length;
-
   const generateChartData = (clusters: ClusterObjectType[]) => {
     const colors = ['red', 'green', 'blue', 'orange', 'purple']; // Add more colors if needed
 
@@ -32,7 +30,9 @@ const Axis: React.FC<DataObjectType> = ({ iter, k, clusters }) => {
     return chartData;
   };
 
+  const axisRef = useRef(null);
   const [options, setOptions] = useState({
+    title: { text: `Points: ${numOfPoints} Groups: ${clusters.length} Iterations: ${iter}` },
     series: generateChartData(clusters)
   });
 

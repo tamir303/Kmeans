@@ -26,6 +26,7 @@ const Graph = () => {
     const clusterData = axios
       .post("/api/clusterData", data)
       .then((res) => {
+        console.log(res.data)
         if (res.status === 200) setData(res.data);
       })
       .catch((err) => {
