@@ -6,44 +6,46 @@ import { AgChartsReact } from "ag-charts-react";
 import { ClusterObjectType, DataObjectType } from "@/app/types";
 
 const Axis: React.FC<DataObjectType> = ({ iter, k, clusters }) => {
+  const [options, setOptions] = useState<Object>({});
   const numOfPoints = clusters.flatMap((cluster) => cluster.values).length;
-  const generateChartData = (clusters: ClusterObjectType[]) => {
-    const colors = ['red', 'green', 'blue', 'orange', 'purple']; // Add more colors if needed
 
-    /** @todo: Issue, values are undefined after running first itermation */
+  const generateChartData = (clusters: ClusterObjectType[]) => {
+    const colors = ["red", "green", "blue", "orange", "purple"]; // Add more colors if needed
+
     const chartData = clusters.map((cluster, index) => {
       const { fields, values } = cluster;
       return {
         data: values.map((valueArray) => {
-          return Object.fromEntries(fields.map((field, index) => [field, valueArray[index]]));
+          return Object.fromEntries(
+            fields.map((field, index) => [field, valueArray[index]])
+          );
         }),
-        type: 'scatter',
+        type: "scatter",
         xKey: `${fields[0]}`,
         yKey: `${fields[1]}`,
         marker: {
-          type: 'circle',
-          fill: colors[index % colors.length]
-        }
-      }
+          type: "circle",
+          fill: colors[index % colors.length],
+          size: 10
+        },
+      };
     });
 
     return chartData;
   };
 
-  const axisRef = useRef(null);
-  const [seriesConfig, setSeriesConfig] = useState<Object>(generateChartData(clusters))
-  const [options, setOptions] = useState<Object>({
-    title: { text: `Points: ${numOfPoints} Groups: ${clusters.length} Iterations: ${iter}` },
-    series: seriesConfig
-  });
-
   useEffect(() => {
-    setSeriesConfig(generateChartData(clusters))
-  }, [clusters])
+    setOptions({
+      title: {
+        text: `Points: ${numOfPoints} Groups: ${clusters.length} Iterations: ${iter}`,
+      },
+      series: generateChartData(clusters),
+    });
+  }, [clusters, numOfPoints, iter]);
 
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
-      <AgChartsReact ref={axisRef} options={options} />
+      <AgChartsReact options={options} />
     </div>
   );
 };
