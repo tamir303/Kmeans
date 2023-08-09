@@ -13,7 +13,7 @@ const Graph = () => {
 
   const [data, setData] = useState<DataObjectType>({
     iter: 0,
-    k: 2,
+    k: 3,
     clusters: query
       ? [JSON.parse(decodeURIComponent(query)) as ClusterObjectType]
       : [],

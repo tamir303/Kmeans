@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { AgChartsReact } from "ag-charts-react";
 import { ClusterObjectType, DataObjectType } from "@/app/types";
 
@@ -23,6 +23,7 @@ const Axis: React.FC<DataObjectType> = ({ iter, k, clusters }) => {
         type: "scatter",
         xKey: `${fields[0]}`,
         yKey: `${fields[1]}`,
+        title: `Cluster ${index}`,
         marker: {
           type: "circle",
           fill: colors[index % colors.length],

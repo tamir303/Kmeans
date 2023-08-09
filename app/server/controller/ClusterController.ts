@@ -19,10 +19,14 @@ export class ClusterController {
 
             // Initialize clusters with provided data and fill remaining clusters with empty ones
             const fields = clusters[0].fields;
-            this._clusters = clusters.map((cluster) => new Cluster(cluster, uuidv4())).concat(new Array(Math.abs(k - clusters.length)).fill(new Cluster({
-                fields,
-                values: []
-            }, uuidv4())));
+            this._clusters = clusters.map((cluster) => new Cluster(cluster, uuidv4()))
+            const fillEmptyClusters = new Array(Math.abs(this._clusters.length - k)).fill(null).map(() => {
+                return new Cluster({
+                    fields,
+                    values: []
+                }, uuidv4());
+            });
+            this._clusters = this._clusters.concat(fillEmptyClusters)
         }
     }
 
