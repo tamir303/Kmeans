@@ -7,15 +7,9 @@ import Axis from "./Axis";
 
 interface GraphContainerProps {
   data: DataObjectType;
-  witdh: number;
-  height: number;
 }
 
-const GraphContainer: React.FC<GraphContainerProps> = ({
-  data,
-  witdh,
-  height,
-}) => {
+const GraphContainer: React.FC<GraphContainerProps> = ({ data }) => {
   return (
     <div
       style={{

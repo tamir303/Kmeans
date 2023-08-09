@@ -39,33 +39,37 @@ export class ClusterController {
         const allPoints = this._clusters.flatMap((cluster) => cluster.values);
         const N = allPoints.length;
         const M = this._clusters.length;
+        var centroids
 
-        // Clear clusters before the next iteration
-        this.cleanClusters();
+        if (this._iter === 0) { // Clean all points from clusters and take random points as centroids
+            this.cleanClusters();
 
-        if (this._iter === 0) { // Randomly choose the first points in the array and spread them around the clusters
+            // Randomly choose the first points in the array and spread them around the clusters
             this._clusters.forEach((cluster) => {
                 cluster.values.push(allPoints[0]);
                 allPoints.shift();
             });
 
             // Calculate initial centroids for each cluster
-            const centroids = this._clusters.map((cluster) => cluster.findCentroid());
-
-            // Create a nested array where each row represents a point (Pi) and each column represents the distance from centroid (Ci)
-            const centroDistance: number[][] = Array.from({
-                length: N
-            }, () => new Array(M).fill(0));
-
-            // Calculate the distance from each point to each centroid
-            centroids.forEach((centroid, Ci) => allPoints.forEach((point, Pi) => (centroDistance[Pi][Ci] = distanceFromCentroid(point, centroid))));
-
-            // Assign each point to the closest cluster
-            centroDistance.forEach((subPiArr) => {
-                const closestClusterCentroid = subPiArr.indexOf(Math.min(...subPiArr));
-                this._clusters[closestClusterCentroid].addValue(allPoints.shift());
-            });
+            centroids = this._clusters.map((cluster) => cluster.findCentroid());
+        } else { // Find all current centroids and then clear all points
+            centroids = this._clusters.map((cluster) => cluster.centroid)
+            this.cleanClusters();
         }
+
+        // Create a nested array where each row represents a point (Pi) and each column represents the distance from centroid (Ci)
+        const centroDistance: number[][] = Array.from({
+            length: N
+        }, () => new Array(M).fill(0));
+
+        // Calculate the distance from each point to each centroid
+        centroids.forEach((centroid, Ci) => allPoints.forEach((point, Pi) => (centroDistance[Pi][Ci] = distanceFromCentroid(point, centroid))));
+
+        // Assign each point to the closest cluster
+        centroDistance.forEach((subPiArr) => {
+            const closestClusterCentroid = subPiArr.indexOf(Math.min(...subPiArr));
+            this._clusters[closestClusterCentroid].addValue(allPoints.shift());
+        });
 
         this._iter ++;
         return {iter: this._iter, k: this._k, clusters: this._clusters}

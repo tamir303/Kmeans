@@ -10,23 +10,20 @@ import axios from "axios";
 const Graph = () => {
   const searchParams = useSearchParams();
   const query = searchParams.get("query");
+  const initialData = [
+    JSON.parse(decodeURIComponent(query as string)) as ClusterObjectType,
+  ];
 
   const [data, setData] = useState<DataObjectType>({
     iter: 0,
-    k: 5,
-    clusters: query
-      ? [JSON.parse(decodeURIComponent(query)) as ClusterObjectType]
-      : [],
+    k: 1,
+    clusters: initialData,
   });
-
-  const graphWidth = 600;
-  const graphHeight = 400;
 
   const runClusterIteration = () => {
     axios
       .post("/api/clusterData", data)
       .then((res) => {
-        console.log(res.data)
         if (res.status === 200) setData(res.data);
       })
       .catch((err) => {
@@ -34,10 +31,24 @@ const Graph = () => {
       });
   };
 
+  const setNumberOfClusters = (e: any) => {
+    const k = e.target.value;
+    if (k && !isNaN(k)) setData({ ...data, k: Number(k) });
+    else console.error("Not a valid number of clusters");
+  };
+
+  const refreshProcess = () => {
+    setData({ iter: 0, k: 1, clusters: initialData });
+  };
+
   return (
     <div>
-      <Sidebar handleIteration={runClusterIteration}>
-        <GraphContainer data={data} witdh={graphWidth} height={graphHeight} />
+      <Sidebar
+        handleIteration={runClusterIteration}
+        numberOfClusters={setNumberOfClusters}
+        refreshProcess={refreshProcess}
+      >
+        <GraphContainer data={data} />
       </Sidebar>
     </div>
   );
