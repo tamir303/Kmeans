@@ -1,12 +1,12 @@
-import {ClusterObjectType} from "@/app/types";
+import { ClusterObjectType } from "@/app/types";
 
 export class Cluster {
-    private _fields : string[];
-    private _values : string[][];
-    private _centroid : number[] = [];
-    private _id : string;
+    private _fields: string[];
+    private _values: string[][];
+    private _centroid: number[] = [];
+    private _id: string;
 
-    constructor({fields, values} : ClusterObjectType, id : string) {
+    constructor({ fields, values }: ClusterObjectType, id: string) {
         this._fields = fields;
         this._values = values;
         this._centroid = this.findCentroid();
@@ -14,7 +14,7 @@ export class Cluster {
     }
 
     get fields() {
-        return this.fields;
+        return this._fields;
     }
 
     get values() {
@@ -29,11 +29,11 @@ export class Cluster {
         return this._id;
     }
 
-    set fields(fields : string[]) {
+    set fields(fields: string[]) {
         this._fields = fields;
     }
 
-    set values(values : string[][]) {
+    set values(values: string[][]) {
         this._values = values;
     }
 
@@ -41,10 +41,10 @@ export class Cluster {
         this._centroid = centroid;
     }
 
-    addValue(value : string[] | undefined) {
-        if (value && value.length !== 0) 
+    addValue(value: string[] | undefined) {
+        if (value && value.length !== 0)
             this._values.push(value)
-        
+
     }
 
     /**
@@ -62,7 +62,7 @@ export class Cluster {
         this._centroid = Array.from({
             length: D
         }, (_, index) => index).map((index) => {
-            return((1 / N) * this._values.reduce((sum, valueArray) => sum + Number(valueArray[index]), 0));
+            return ((1 / N) * this._values.reduce((sum, valueArray) => sum + Number(valueArray[index]), 0));
         });
 
         return this._centroid;
@@ -95,7 +95,7 @@ export class Cluster {
         return variance.map((sum) => (1 / N) * sum);
     }
 
-    nextIter(values : string[][]) {
+    nextIter(values: string[][]) {
         this._values = values;
         this._centroid = this.findCentroid();
     }

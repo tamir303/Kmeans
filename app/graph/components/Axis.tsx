@@ -31,10 +31,15 @@ const Axis: React.FC<DataObjectType> = ({ iter, k, clusters }) => {
   };
 
   const axisRef = useRef(null);
-  const [options, setOptions] = useState({
+  const [seriesConfig, setSeriesConfig] = useState<Object>(generateChartData(clusters))
+  const [options, setOptions] = useState<Object>({
     title: { text: `Points: ${numOfPoints} Groups: ${clusters.length} Iterations: ${iter}` },
-    series: generateChartData(clusters)
+    series: seriesConfig
   });
+
+  useEffect(() => {
+    setSeriesConfig(generateChartData(clusters))
+  }, [clusters])
 
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>

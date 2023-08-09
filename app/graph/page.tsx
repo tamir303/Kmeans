@@ -23,7 +23,7 @@ const Graph = () => {
   const graphHeight = 400;
 
   const runClusterIteration = () => {
-    const clusterData = axios
+    axios
       .post("/api/clusterData", data)
       .then((res) => {
         console.log(res.data)
