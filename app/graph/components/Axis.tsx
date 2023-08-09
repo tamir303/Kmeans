@@ -10,7 +10,18 @@ const Axis: React.FC<DataObjectType> = ({ iter, k, clusters }) => {
   const numOfPoints = clusters.flatMap((cluster) => cluster.values).length;
 
   const generateChartData = (clusters: ClusterObjectType[]) => {
-    const colors = ["red", "green", "blue", "orange", "purple"]; // Add more colors if needed
+    const colors = [
+      "red",
+      "green",
+      "blue",
+      "orange",
+      "purple",
+      "cyan",
+      "magenta",
+      "black",
+      "lime",
+      "teal",
+    ]; // Add more colors if needed
 
     const chartData = clusters.map((cluster, index) => {
       const { fields, values } = cluster;
@@ -27,7 +38,7 @@ const Axis: React.FC<DataObjectType> = ({ iter, k, clusters }) => {
         marker: {
           type: "circle",
           fill: colors[index % colors.length],
-          size: 10
+          size: 10,
         },
       };
     });

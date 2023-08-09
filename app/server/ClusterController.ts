@@ -1,7 +1,7 @@
 import {DataObjectType} from "@/app/types";
-import {Cluster} from "@/app/server/logic/Cluster";
+import {Cluster} from "@/app/server/Cluster";
 import {v4 as uuidv4} from "uuid";
-import {validateClusterData, distanceFromCentroid} from "@/app/server/logic/Utils";
+import {validateClusterData, distanceFromCentroid} from "@/app/server/Utils";
 
 export class ClusterController {
     private _iter : number;
@@ -67,7 +67,7 @@ export class ClusterController {
             });
         }
 
-        // this._iter++;
+        this._iter ++;
         return {iter: this._iter, k: this._k, clusters: this._clusters}
     }
 }
